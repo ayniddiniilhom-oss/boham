@@ -84,7 +84,7 @@ export async function onRequestPost({ request, env }) {
   const geminiKey = env.AI_GEMINI_KEY || env.GEMINI_API_KEY;
   const model = /^[a-zA-Z0-9._-]{1,80}$/.test(env.GEMINI_MODEL || "")
     ? env.GEMINI_MODEL
-    : "gemini-3.8-flash";
+    : "gemini-2.5-flash";
 
   if (!supabaseUrl || !anonKey || !geminiKey) {
     return json({ error: "Танзимоти серверӣ пурра нестанд." }, 500);
@@ -126,23 +126,31 @@ export async function onRequestPost({ request, env }) {
           .slice(-20)
       : [];
 
-    const upstream = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
+    const geminiController = new AbortController();
+    const geminiTimeout = setTimeout(() => geminiController.abort(), 35000);
+    let upstream;
+    try {
+      upstream = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+        {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
+        signal: geminiController.signal,
         body: JSON.stringify({
           system_instruction: { parts: [{ text: "Ту Ёвари «Бо Ҳам», ёвари портали донишҷӯён ҳастӣ. Ба забони корбар ҷавоб деҳ; агар тоҷикӣ нависад, тоҷикӣ навис. Ҷавобро бо Markdown навис. Маълумоти расмӣ, ҷадвал, нарх ё эълонро насоз; агар маълумот надорӣ, ошкоро бигӯ." }] },
           contents: [...history, { role: "user", parts: [{ text: message }] }],
           generationConfig: { temperature: 0.4, maxOutputTokens: 1200 },
         }),
-      },
-    );
+        },
+      );
+    } finally {
+      clearTimeout(geminiTimeout);
+    }
 
     const result = await upstream.json();
     if (!upstream.ok) {
       console.error("Gemini error", upstream.status, result);
-      return json({ error: upstream.status === 429 ? "Лимити AI расид. Баъдтар кӯшиш кунед." : "Gemini ҳоло ҷавоб надод." }, 502);
+      return json({ error: upstream.status === 429 ? "Лимити AI расид. Баъдтар кӯшиш кунед." : `Gemini хатогӣ баргардонд (${upstream.status}).` }, 502);
     }
 
     const answer = text(result?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n"), 20000);
@@ -157,7 +165,7 @@ export async function onRequestPost({ request, env }) {
     return json({ answer, conversationId });
   } catch (error) {
     console.error(error);
-    return json({ error: "Паём коркард ё сабт карда нашуд." }, 502);
+    return json({ error: error?.name === "AbortError" ? "Gemini дер ҷавоб дод. Баъдтар боз кӯшиш кунед." : "Паём коркард ё сабт карда нашуд." }, 502);
   }
 }
 

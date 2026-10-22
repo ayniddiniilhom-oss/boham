@@ -3,7 +3,7 @@ export async function onRequestGet({ env }) {
   return Response.json({
     status: configured ? "ready" : "needs_configuration",
     aiConfigured: configured,
-    model: "gemini-3.8-flash",
+    model: env.GEMINI_MODEL || "gemini-2.5-flash",
     note: configured ? "AI key is configured" : "Set AI_GEMINI_KEY in Cloudflare."
   }, { headers: { "Cache-Control": "no-store" } });
 }
