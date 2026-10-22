@@ -1,92 +1,122 @@
-# Бо Ҳам — бастаи такмилёфта барои Cloudflare Pages
+# Бо Ҳам — портали донишҷӯён
 
-Ин баста аз нав санҷида шудааст ва барои нашр тавассути **Cloudflare Pages + Wrangler** омода шудааст. Он худ аз худ ба сомонаи зинда нашр намешавад; нашр бояд аз ҳисоби Cloudflare-и шумо иҷро шавад.
+**Бо Ҳам** портали донишҷӯён барои ҷустуҷӯи маълумот, хабарҳо, ҷадвали дарсҳо, ҷомеа ва ёвари AI мебошад. Лоиҳа бо HTML, CSS ва JavaScript-и оддӣ сохта шудааст ва React/Vite талаб намекунад.
 
-## Дар ин версия чӣ кор мекунад?
+## Хизматрасониҳои фаъол
 
-- `index.html` — интерфейси портали донишҷӯён, бахшҳои ҷустуҷӯ, хизматрасонӣ, тамос ва тарҳи мутобиқ ба телефон/компютер.
-- Ҷустуҷӯ дар матни бахшҳои намоён, аз ҷумла номҳои таҳиягарон.
-- Тақвим сана ва моҳи ҷориро аз худи дастгоҳ мегирад; тақвим **ҷадвали расмии дарсҳо нест**.
-- Намуди торик фаъол мешавад ва интихоби он дар браузер нигоҳ дошта мешавад.
-- Шакли пешниҳод паёмро танҳо дар браузери ҳамин дастгоҳ нигоҳ медорад; ба маъмур намефиристад.
-- `functions/api/chat.js` — API-и серверии Gemini дар `/api/chat`; калиди AI ба браузер дода намешавад.
-- `functions/api/health.js` — санҷиши танзим дар `/api/health`; он мавҷуд будани secret-ро месанҷад, на дурустии калидро.
-- `_headers` — сарлавҳаҳои асосии амниятӣ.
-- `wrangler.toml` — танзимоти Cloudflare Pages.
+- **Cloudflare Pages** — hosting ва нашри production.
+- **Cloudflare Pages Functions** — backend дар `functions/api/`.
+- **Supabase Auth** — воридшавӣ бо Email ва Google.
+- **Supabase Database** — таърихи гуфтугӯи AI ва паёмҳои чати донишҷӯён.
+- **Gemini AI** — ёвари серверии Markdown бо контексти паёмҳои охирин.
+- **Се забон** — тоҷикӣ, русӣ ва англисӣ барои матнҳои интерфейс, placeholder-ҳо, label-ҳо, тугмаҳо, бахшҳои ҷадвал ва паёмҳои намоён.
 
-## Пеш аз нашр
+## Ҷадвали дарсҳо
 
-1. Нусхаи эҳтиётии версияи ҳозираи сомонаро нигоҳ дор.
-2. ZIP-ро ба папкаи алоҳида кушо. Боварӣ ҳосил кун, ки дар папкаи асосӣ `index.html`, `wrangler.toml`, `_headers` ва папкаи `functions` ҳастанд.
-3. Дар Cloudflare Dashboard → **Workers & Pages** → лоиҳаи Pages → **Settings → Variables and Secrets** барои муҳити **Production** secret соз:
-   - Ном: `AI_GEMINI_KEY`
-   - Арзиш: калиди Gemini API-и худат
-4. Калидро ба `index.html`, ба ин дастур ё ба GitHub нагузор. Агар калид қаблан дар ҷои оммавӣ нашр шуда бошад, онро аз Google AI Studio иваз кун.
-5. Модели пешфарз `gemini-3.8-flash` аст. Агар дар ҳисоби Google AI Studio дастрас набошад, `GEMINI_MODEL`-ро ҳамчун variable/secret ба номи модели воқеан дастрас иваз кун.
+Дар `index.html` ҷадвали ҳафтаинаи гурӯҳ ворид шудааст:
 
-## Нашр дар Windows бо Wrangler
+- Душанбе — дипломатияи иқтисодӣ, иқтисодиёти байналмилалӣ ва ҳуқуқи байналмилалӣ;
+- Сешанбе — логистика, муносибатҳои байналмилалии асъорӣ-қарзӣ, ҳуқуқ ва КМРО;
+- Чоршанбе — кафедраи ҳарбӣ;
+- Панҷшанбе — КМРО ва амалии логистика ва дипломатияи иқтисодӣ;
+- Ҷумъа — КМРО, корҳои амалӣ ва соати тарбиявӣ;
+- Шанбе — корҳои амалии иқтисодиёт, муносибатҳои асъорӣ-қарзӣ, логистика ва ҳуқуқ.
 
-### 1. Омодагӣ
-
-Node.js LTS насб бошад. PowerShell-ро маҳз дар папкаи кушодашудаи ZIP кушо (дар File Explorer дар сатри суроға `powershell` навиштан мумкин аст).
-
-### 2. Ба Cloudflare даромадан ва номи лоиҳаро санҷидан
-
-```powershell
-npx wrangler login
-npx wrangler pages project list
-```
-
-Дар рӯйхат санҷ, ки номи лоиҳа воқеан `bohamiiliutet` аст. URL-и `https://c7a1a3db.bohamiiliutet.pages.dev` эҳтимол URL-и deployment-и пешнамоишӣ аст; пеш аз нашр домени Production ва номи лоиҳаро дар Cloudflare санҷ.
-
-### 3. Нашр кардан
-
-Танҳо вақте иҷро кун, ки номи лоиҳа ва папкаи ҷорӣ санҷида шуданд:
-
-```powershell
-npx wrangler pages deploy . --project-name bohamiiliutet
-```
-
-Агар лоиҳа ба GitHub пайваст шуда бошад, роҳи беҳтар ин аст, ки файлҳоро ба репозиторияи дуруст гузорӣ ва deploy-ро тавассути Git иҷро кун. ZIP-и drag-and-drop дар Dashboard барои сохтани Pages Functions кофӣ нест; функсияи `/api/chat` метавонад дар чунин нашр фаъол нашавад.
-
-## Санҷиши баъди нашр
-
-1. Сомонаи Production-ро кушо.
-2. Ба `https://ДОМЕНИ-ПРОДАКШН/api/health` рав. Масалан, агар домени асосӣ тасдиқ шуда бошад: `https://bohamiiliutet.pages.dev/api/health`.
-3. Агар `"aiConfigured": true` бинӣ, secret ба муҳит пайваст аст. Ин ҳанӯз дурустии калид ё дастрасии моделро тасдиқ намекунад.
-4. Дар худи сомона «Ёвари зеҳни сунъӣ»-ро кушо ва саволи одӣ фирист.
-5. Агар хато бошад, арзиши калидро ба ман нафирист; танҳо матни хаторо фирист, бе ягон secret.
-
-## Чӣ ҳанӯз пурра пайваст нашудааст?
-
-Ин ZIP барои интерфейс ва **AI endpoint** омода шудааст, аммо ҳанӯз портали пурраи истеҳсолӣ нест. Барои фаъол кардани вазифаҳои зерин маълумот/танзимоти хидматҳои беруна ва санҷиши воқеӣ лозим аст:
-
-- Воридшавии Google/email ва ҳисоби донишҷӯ — Supabase Auth ё Firebase Auth.
-- Чати воқеии байни донишҷӯён ва паёмҳои realtime — базаи додаҳо, қоидаҳои RLS ва муҳофизати зидди спам.
-- Фиристодани фикру пешниҳодҳо ба маъмур — API ва базаи серверӣ.
-- Фармоиши хӯрок, мағозаи донишҷӯён, пардохт ва пайгирии фармоиш — рӯйхати воқеии маҳсулот, нарх, масъули қабул ва API.
-- Хабарҳо, чорабиниҳо ва ҷадвали дарсҳои расмӣ — манбаи тасдиқшудаи муассиса.
-- Акси воқеии кампус — файли аслӣ/пайванди тасдиқшуда ва ҳуқуқи истифода.
-
-Ин қисмҳоро бе URL/калидҳои оммавии Supabase ё Firebase, сохтори база, маълумоти расмӣ ва санҷиши ҳисоби шумо боэътимод ба кор андохтан мумкин нест. **Ҳеҷ гоҳ** `service_role` ё калиди махфии серверро ба фронтенд нагузор.
-
-## Амният ва маҳдудиятҳо
-
-- API дар сервер кор мекунад; калиди Gemini дар HTML намоён нест.
-- Андозаи савол то 4000 аломат маҳдуд аст; дархости болоӣ 25 сония timeout дорад.
-- Санҷиши Origin танҳо муҳофизати иловагӣ аст. Ин баста rate limiting-и қавӣ, CAPTCHA ё authentication-и API надорад. Пеш аз истифодаи васеъ, лимити хароҷоти Gemini ва муҳофизати abuse-ро дар Cloudflare/Google танзим кун.
-- Тақвим танҳо намоишӣ аст; рӯйдодҳои расмӣ ба он ворид нашудаанд.
-- Шакли пешниҳод ва дигар маълумоти маҳаллӣ байни дастгоҳҳо ҳамоҳанг намешаванд.
+Маълумоти пурраи фан, омӯзгор ва навъи дарс дар объекти `weeklySchedule` дар дохили `index.html` нигоҳ дошта мешавад. Барои иваз кардани гурӯҳ ё семестр танҳо ҳамин объектро навсозӣ кунед.
 
 ## Файлҳои асосӣ
 
 ```text
-index.html
-_headers
-wrangler.toml
-README.md
-functions/
-  api/
-    chat.js
-    health.js
+index.html                    # frontend, CSS, i18n, Auth, schedule ва UI
+functions/api/chat.js         # Gemini API + Supabase Auth + таърихи AI
+functions/api/health.js       # ҳолати конфигуратсияи AI
+_headers                       # security headers
+wrangler.toml                 # Cloudflare Pages settings
+README.md                     # ин роҳнамо
 ```
+
+## Variables ва Secrets дар Cloudflare
+
+Дар **Cloudflare Pages → Settings → Variables and Secrets → Production**:
+
+```text
+AI_GEMINI_KEY       Secret     калиди Gemini API
+GEMINI_MODEL        Plaintext  gemini-2.5-flash
+SUPABASE_URL        Plaintext  https://otpbejlswdxqhgbgqnhu.supabase.co
+SUPABASE_ANON_KEY   Plaintext  publishable key-и Supabase
+```
+
+`AI_GEMINI_KEY` ҳеҷ гоҳ ба `index.html`, GitHub ё паёми чат гузошта нашавад. Агар калид дар ҷои оммавӣ пайдо шуда бошад, онро дар Google AI Studio rotate карда, қимати навро танҳо ҳамчун Cloudflare Secret гузоред.
+
+## Supabase
+
+Ҷадвалҳои асосӣ:
+
+```text
+ai_conversations
+ai_messages
+community_messages
+```
+
+RLS фаъол аст. Барои `community_messages` танҳо корбарони authenticated метавонанд паёмҳоро бихонанд ва паёми худро илова кунанд. Барои тағйири schema аз Supabase migration истифода баред; `service_role`-ро ба frontend нагузоред.
+
+Дар **Authentication → URL Configuration**:
+
+```text
+Site URL:
+https://bohamiiliutet.pages.dev
+
+Redirect URL:
+https://bohamiiliutet.pages.dev/
+```
+
+`http://localhost:3000` танҳо барои development-и маҳаллӣ истифода шавад ва набояд Site URL-и production бошад.
+
+## Нашр
+
+Repository ба Cloudflare Pages пайваст аст. Роҳи асосӣ:
+
+```powershell
+npx wrangler login
+npx wrangler pages deploy . --project-name bohamiiliutet
+```
+
+Пеш аз deploy санҷед, ки дар папкаи асосӣ `index.html`, `functions/`, `_headers` ва `wrangler.toml` ҳастанд.
+
+## Санҷиши баъди deploy
+
+```text
+https://bohamiiliutet.pages.dev/api/health
+```
+
+Натиҷаи дуруст бояд монанди ин бошад:
+
+```json
+{
+  "status": "ready",
+  "aiConfigured": true,
+  "model": "gemini-2.5-flash"
+}
+```
+
+Баъд дар сайт инҳоро санҷед:
+
+1. Email login ва Google login.
+2. Ёвари AI бо саволи кӯтоҳ.
+3. Таърихи ҷавобҳои AI.
+4. Чати донишҷӯён.
+5. Иваз кардани забон ба тоҷикӣ, русӣ ва англисӣ.
+6. Намоиши ҷадвали ҳар рӯзи ҳафта.
+
+## Фалсафаи дизайн
+
+Ранги асосии сабз нигоҳ дошта шуд, зеро сабз ба донишкада, рушд, оромӣ ва эътимод ишора мекунад. Барои он ки саҳифа дилкушо бошад, сабзи тира танҳо дар sidebar, hero ва тугмаҳои асосӣ истифода мешавад; фонҳои сафеду сабзи хеле равшан барои хондан ва истироҳати чашм мебошанд; lime ҳамчун accent барои диққат ба CTA ва ҳолати фаъол истифода мешавад.
+
+Тарҳи нав ба се принсип такя мекунад: фазои холии бештар, карточкаҳои бо radius-и мулоим ва hierarchy-и равшани матн. Ин сайт бояд ҳамзамон ҷиддии академӣ ва гармии ҷомеаи донишҷӯиро нигоҳ дорад.
+
+## Амният
+
+- Калиди Gemini танҳо дар server-side environment аст.
+- Access token ва refresh token-ҳои Supabase-ро дар чат ё GitHub нашр накунед.
+- Агар URL бо `#access_token=...` тасодуфан мубодила шуд, session/OAuth connection-ро revoke кунед.
+- Ҳеҷ гоҳ `SUPABASE_SERVICE_ROLE_KEY`, Cloudflare API token ё Google Client Secret-ро ба frontend нагузоред.
