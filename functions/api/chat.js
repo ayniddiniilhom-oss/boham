@@ -79,8 +79,8 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestPost({ request, env }) {
-  const supabaseUrl = String(env.SUPABASE_URL || "").replace(/\/$/, "");
-  const anonKey = env.SUPABASE_ANON_KEY;
+  const supabaseUrl = String(env.SUPABASE_URL || "https://otpbejlswdxqhgbgqnhu.supabase.co").replace(/\/$/, "");
+  const anonKey = env.SUPABASE_ANON_KEY || "sb_publishable_RJt-ytjsKJf9_E6kfFDcuA_uxRr2Rsj";
   const geminiKey = env.AI_GEMINI_KEY || env.GEMINI_API_KEY;
   const model = /^[a-zA-Z0-9._-]{1,80}$/.test(env.GEMINI_MODEL || "")
     ? env.GEMINI_MODEL
