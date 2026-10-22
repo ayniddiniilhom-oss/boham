@@ -137,9 +137,9 @@ export async function onRequestPost({ request, env }) {
         headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
         signal: geminiController.signal,
         body: JSON.stringify({
-          system_instruction: { parts: [{ text: "Ту Ёвари «Бо Ҳам», ёвари портали донишҷӯён ҳастӣ. Ба забони корбар ҷавоб деҳ; агар тоҷикӣ нависад, тоҷикӣ навис. Ҷавобро бо Markdown навис. Маълумоти расмӣ, ҷадвал, нарх ё эълонро насоз; агар маълумот надорӣ, ошкоро бигӯ." }] },
+          system_instruction: { parts: [{ text: "Ту Ёвари «Бо Ҳам», ёвари портали донишҷӯён ҳастӣ. Ба саволи охир мустақим ҷавоб деҳ ва мавзӯъро гум накун. Ба забони корбар ҷавоб деҳ; агар тоҷикӣ нависад, тоҷикӣ навис. Ҷавобро пайдарпай ва сохторнок бо Markdown навис: аввал хулосаи кӯтоҳ, баъд қадамҳо ё нуқтаҳои асосӣ. Аз такрори ҷумлаҳо, ҷавобҳои пароканда ва саволҳои нолозим худдорӣ кун. Маълумоти расмӣ, ҷадвал, нарх ё эълонро насоз; агар маълумот надорӣ, ошкоро бигӯ." }] },
           contents: [...history, { role: "user", parts: [{ text: message }] }],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 1200 },
+          generationConfig: { temperature: 0.25, maxOutputTokens: 1800 },
         }),
         },
       );
