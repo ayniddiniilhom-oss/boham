@@ -1,5 +1,5 @@
 export async function onRequestGet({ env }) {
-  const configured = Boolean(env.AI_GEMINI_KEY);
+  const configured = Boolean(env.AI_GEMINI_KEY || env.GEMINI_API_KEY);
   return Response.json({
     status: configured ? "ready" : "needs_configuration",
     aiConfigured: configured,
