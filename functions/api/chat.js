@@ -12,6 +12,33 @@ function text(value, max = 12000) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function requestGemini(model, geminiKey, payload, signal) {
+  const delays = [0, 900, 1800, 3200];
+  let lastStatus = 503;
+  let lastResult = null;
+  for (let attempt = 0; attempt < delays.length; attempt += 1) {
+    if (delays[attempt]) await sleep(delays[attempt]);
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
+        signal,
+        body: JSON.stringify(payload),
+      },
+    );
+    let result = {};
+    try { result = await response.json(); } catch { result = {}; }
+    if (response.ok) return { response, result };
+    lastStatus = response.status;
+    lastResult = result;
+    if (![429, 500, 502, 503, 504].includes(response.status)) break;
+  }
+  return { response: { ok: false, status: lastStatus }, result: lastResult || {} };
+}
+
 function authHeaders(accessToken, anonKey) {
   return {
     apikey: anonKey,
@@ -127,30 +154,24 @@ export async function onRequestPost({ request, env }) {
       : [];
 
     const geminiController = new AbortController();
-    const geminiTimeout = setTimeout(() => geminiController.abort(), 35000);
+    const geminiTimeout = setTimeout(() => geminiController.abort(), 25000);
     let upstream;
+    let upstreamResult;
     try {
-      upstream = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-        {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
-        signal: geminiController.signal,
-        body: JSON.stringify({
+      ({ response: upstream, result: upstreamResult } = await requestGemini(model, geminiKey, {
           system_instruction: { parts: [{ text: "Ту Ёвари «Бо Ҳам», ёвари портали донишҷӯён ҳастӣ. Ба саволи охир мустақим ҷавоб деҳ ва мавзӯъро гум накун. Ба забони корбар ҷавоб деҳ; агар тоҷикӣ нависад, тоҷикӣ навис. Ҷавобро пайдарпай ва сохторнок бо Markdown навис: аввал хулосаи кӯтоҳ, баъд қадамҳо ё нуқтаҳои асосӣ. Аз такрори ҷумлаҳо, ҷавобҳои пароканда ва саволҳои нолозим худдорӣ кун. Маълумоти расмӣ, ҷадвал, нарх ё эълонро насоз; агар маълумот надорӣ, ошкоро бигӯ." }] },
           contents: [...history, { role: "user", parts: [{ text: message }] }],
           generationConfig: { temperature: 0.25, maxOutputTokens: 1800 },
-        }),
-        },
-      );
+        }, geminiController.signal));
     } finally {
       clearTimeout(geminiTimeout);
     }
 
-    const result = await upstream.json();
+    const result = upstreamResult || {};
     if (!upstream.ok) {
       console.error("Gemini error", upstream.status, result);
-      return json({ error: upstream.status === 429 ? "Лимити AI расид. Баъдтар кӯшиш кунед." : `Gemini хатогӣ баргардонд (${upstream.status}).` }, 502);
+      if (upstream.status === 429) return json({ error: "Лимити муваққатии AI расид. Лутфан баъд аз якчанд сония боз кӯшиш кунед." }, 429);
+      return json({ error: "Gemini ҳоло муваққатан ҷавоб дода натавонист. Лутфан саволро боз фиристед." }, 502);
     }
 
     const answer = text(result?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n"), 20000);
