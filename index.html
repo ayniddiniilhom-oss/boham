@@ -73,6 +73,9 @@ body{background:#fbfcfa;color:var(--ink)}
 @media(max-width:1100px){.shell{grid-template-columns:230px minmax(0,1fr)}.service-grid{grid-template-columns:repeat(3,1fr)}#news{width:100%;display:block}#schedule{width:100%;display:block;margin-left:0}.feature-row{display:grid;grid-template-columns:1.2fr .8fr}.feature-row>.panel:last-child{display:block}.quickgrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:780px){.shell{display:block}.sidebar{left:-290px;width:280px}.topbar{height:65px}.content{padding:0 12px 35px}.hero{height:410px;min-height:410px;padding:25px 22px;border-radius:0 0 12px 12px}.hero h1{font-size:41px}.hero-badge{width:74px;height:74px;font-size:15px;right:8%;top:10%}.quickgrid{grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.quick{min-height:77px}.section{margin-top:30px}#news,#schedule{width:100%;display:block;margin-top:30px;margin-left:0}.feature-row{display:block}.feature-row>.panel:last-child{display:none}.service-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:430px){.quickgrid{grid-template-columns:1fr}.top-search{max-width:130px}.hero h1{font-size:36px}.hero p{font-size:12px}.hero-badge{right:5%;top:8%}.service-grid{grid-template-columns:1fr 1fr}.toplinks{display:none}}
+
+/* The supplied hero crop already contains the reference badge. */
+.hero-badge{display:none}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
