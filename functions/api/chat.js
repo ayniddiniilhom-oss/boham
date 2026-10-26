@@ -12,6 +12,15 @@ function text(value, max = 12000) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+function imagePart(value) {
+  if (!value || typeof value !== "object") return null;
+  const mimeType = String(value.mimeType || "").toLowerCase();
+  const data = typeof value.data === "string" ? value.data.replace(/^data:[^;]+;base64,/, "") : "";
+  const allowed = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+  if (!allowed.has(mimeType) || !/^[A-Za-z0-9+/]+={0,2}$/.test(data) || data.length > 8_000_000) return null;
+  return { inline_data: { mime_type: mimeType, data } };
+}
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function requestGemini(model, geminiKey, payload, signal) {
@@ -129,6 +138,8 @@ export async function onRequestPost({ request, env }) {
 
   const message = text(body?.message, 12000);
   if (!message) return json({ error: "Паём холӣ буда наметавонад." }, 400);
+  const image = imagePart(body?.image);
+  if (body?.image && !image) return json({ error: "Акс нодуруст аст ё аз ҳад калон мебошад." }, 400);
 
   let conversationId = text(body?.conversationId, 80);
   try {
@@ -160,7 +171,7 @@ export async function onRequestPost({ request, env }) {
     try {
       ({ response: upstream, result: upstreamResult } = await requestGemini(model, geminiKey, {
           system_instruction: { parts: [{ text: "Ту Ёвари «Бо Ҳам», ёвари портали донишҷӯён ҳастӣ. Ба саволи охир мустақим ҷавоб деҳ ва мавзӯъро гум накун. Ба забони корбар ҷавоб деҳ; агар тоҷикӣ нависад, тоҷикӣ навис. Ҷавобро пайдарпай ва сохторнок бо Markdown навис: аввал хулосаи кӯтоҳ, баъд қадамҳо ё нуқтаҳои асосӣ. Аз такрори ҷумлаҳо, ҷавобҳои пароканда ва саволҳои нолозим худдорӣ кун. Маълумоти расмӣ, ҷадвал, нарх ё эълонро насоз; агар маълумот надорӣ, ошкоро бигӯ." }] },
-          contents: [...history, { role: "user", parts: [{ text: message }] }],
+          contents: [...history, { role: "user", parts: image ? [{ text: message }, image] : [{ text: message }] }],
           generationConfig: { temperature: 0.25, maxOutputTokens: 1800 },
         }, geminiController.signal));
     } finally {
@@ -178,7 +189,7 @@ export async function onRequestPost({ request, env }) {
     if (!answer) return json({ error: "Gemini ҷавоби матнӣ барнагардонд." }, 502);
 
     await insertMessages(supabaseUrl, anonKey, accessToken, user.id, conversationId, [
-      { role: "user", content: message },
+      { role: "user", content: image ? `${message}\n[Акс барои таҳлил замима шуд]` : message },
       { role: "model", content: answer },
     ]);
     await touchConversation(supabaseUrl, anonKey, accessToken, conversationId);

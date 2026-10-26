@@ -5,5 +5,6 @@
   <url><loc>https://bohamiiliutet.pages.dev/schedule/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://bohamiiliutet.pages.dev/services/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://bohamiiliutet.pages.dev/food/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/directory/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://bohamiiliutet.pages.dev/contact/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
