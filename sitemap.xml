@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://bohamiiliutet.pages.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/news/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/schedule/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/services/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/food/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/directory/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/library/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://bohamiiliutet.pages.dev/contact/</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/</loc><lastmod>2026-10-29</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/news/</loc><lastmod>2026-10-29</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/schedule/</loc><lastmod>2026-10-29</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/services/</loc><lastmod>2026-10-29</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/food/</loc><lastmod>2026-10-29</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/directory/</loc><lastmod>2026-10-29</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/library/</loc><lastmod>2026-10-29</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://bohamiiliutet.pages.dev/contact/</loc><lastmod>2026-10-29</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>
